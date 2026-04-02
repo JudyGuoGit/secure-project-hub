@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${SPRING_DATASOURCE_DB}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - secure-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: secure_project_hub
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - secure-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d secure_project_hub"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  secure-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
