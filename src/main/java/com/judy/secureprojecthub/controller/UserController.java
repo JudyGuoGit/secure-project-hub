@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,17 +24,20 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping
-    @Operation(summary = "Get all users", description = "Retrieve a list of all users in the system")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Operation(summary = "Get all users", description = "Retrieve a list of all users in the system (requires ADMIN or USER role)")
     @ApiResponse(responseCode = "200", description = "Users retrieved successfully")
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get user by ID", description = "Retrieve a specific user by their ID")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Operation(summary = "Get user by ID", description = "Retrieve a specific user by their ID (requires ADMIN or USER role)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "User found"), 
-        @ApiResponse(responseCode = "404", description = "User not found")
+        @ApiResponse(responseCode = "404", description = "User not found"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - insufficient permissions")
     })
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> user = userRepository.findById(id);
@@ -41,21 +45,25 @@ public class UserController {
     }
 
     @PostMapping
-    @Operation(summary = "Create new user", description = "Create a new user account in the system")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Create new user", description = "Create a new user account in the system (requires ADMIN role)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "User created successfully"), 
-        @ApiResponse(responseCode = "400", description = "Invalid user data")
+        @ApiResponse(responseCode = "400", description = "Invalid user data"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - only ADMIN can create users")
     })
     public User createUser(@RequestBody User user) {
         return userRepository.save(user);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update user", description = "Update an existing user's information")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Update user", description = "Update an existing user's information (requires ADMIN role)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "User updated successfully"), 
         @ApiResponse(responseCode = "404", description = "User not found"),
-        @ApiResponse(responseCode = "400", description = "Invalid user data")
+        @ApiResponse(responseCode = "400", description = "Invalid user data"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - only ADMIN can update users")
     })
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         return userRepository.findById(id)
@@ -71,17 +79,18 @@ public class UserController {
                     user.setBio(userDetails.getBio());
                     user.setUpdatedAt(userDetails.getUpdatedAt());
                     user.setLastLoginAt(userDetails.getLastLoginAt());
-                    // Do not update createdAt
                     return ResponseEntity.ok(userRepository.save(user));
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete user", description = "Delete a user from the system")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Delete user", description = "Delete a user from the system (requires ADMIN role)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "User deleted successfully"),
-        @ApiResponse(responseCode = "404", description = "User not found")
+        @ApiResponse(responseCode = "404", description = "User not found"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - only ADMIN can delete users")
     })
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         return userRepository.findById(id)
