@@ -39,3 +39,41 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
+# Server SSL/TLS Configuration (for PKI/mTLS support)
+server:
+  # HTTPS configuration (PKI/mTLS) - Primary secure port
+  ssl:
+    # Enable SSL/TLS support
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: changeit
+    key-store-type: PKCS12
+    key-alias: localhost
+    key-store-provider: SUN
+    # Trust store for validating client certificates
+    trust-store: classpath:truststore.p12
+    trust-store-password: changeit
+    trust-store-type: PKCS12
+    trust-store-provider: SUN
+    client-auth: WANT  # 'WANT' = client cert optional, let app filter handle validation
+  port: 8443  # HTTPS port
+  http2:
+    enabled: true
+  
+  # Allow HTTP on 8080 for actuator/token endpoints (non-sensitive)
+  # PKI endpoints are on 8443 HTTPS only
+  shutdown: graceful
+
+# PKI/mTLS Configuration
+pki:
+  enabled: true  # Set to true to enable PKI authentication endpoints
+  truststore-path: classpath:truststore.p12
+  truststore-password: changeit
+  truststore-type: PKCS12
+  # Certificate extraction and validation
+  certificate:
+    subject-attribute: CN  # Extract Common Name from certificate subject
+    issuer-attribute: O    # Extract Organization from certificate issuer
+    validate-expiry: true
+    validate-chain: true
+

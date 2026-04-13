@@ -31,3 +31,44 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Certificate & Key Files - SECURITY CRITICAL ###
+# Private keys - NEVER commit these!
+ca-key.pem
+server-key.pem
+client-key.pem
+*.key
+*.srl
+
+# Keystores and truststores with private keys
+keystore.p12
+client-keystore.p12
+
+# Certificate directories (keep certs/ for reference/testing during dev)
+# Uncomment below if you want to exclude entire certs/ directory in production
+# /certs/
+
+# But DO track public certificates for reference
+!ca-cert.pem
+!server-cert.pem
+!client-cert.pem
+!truststore.p12
+
+# Certificate Signing Requests (temporary files)
+*.csr
+
+### Environment Files ###
+.env
+.env.local
+.env.*.local
+
+### macOS ###
+.DS_Store
+*.swp
+*.swo
+*~
+
+### IDE temporary files ###
+*.tmp
+*.bak
+*.backup

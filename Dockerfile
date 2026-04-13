@@ -18,8 +18,10 @@ WORKDIR /app
 
 COPY --from=builder /build/target/secure-project-hub-*.jar app.jar
 
-# Expose port 8080 for application and 5005 for debugging
-EXPOSE 8080 5005
+# Expose port 8080 for HTTP, 8443 for HTTPS (PKI/mTLS), and 5005 for debugging
+EXPOSE 8080 8443 5005
 
-# Run with debug flags enabled
-ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "app.jar"]
+# Run with optimized memory settings and remote debugging enabled
+# Increased heap size: 512m -> 1024m to handle PKI/certificate operations
+# Debug port 5005: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+ENTRYPOINT ["java", "-Xms512m", "-Xmx1024m", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "app.jar"]

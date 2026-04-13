@@ -1,0 +1,21 @@
+# Certificate Files - NEVER COMMIT PRIVATE KEYS TO GIT!
+certs/
+*.pem
+*.csr
+*.p12
+*.jks
+keystore.*
+truststore.*
+ca-key.*
+client-key.*
+server-key.*
+
+# Only these are OK to commit:
+!certs/ca-cert.pem
+!docs/
+
+# IDE and Build artifacts (already in .gitignore but keeping for reference)
+.idea/
+*.iml
+target/
+.DS_Store

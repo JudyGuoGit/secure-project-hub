@@ -1,0 +1,155 @@
+PKI TESTING - QUICK REFERENCE CARD
+==================================
+
+🚀 QUICK START (Copy & Paste)
+────────────────────────────
+
+Option 1: Auto Test (Recommended)
+  cd /Users/jguo/work/eclipse-workspace/secure-project-hub && bash pki-test-suite.sh
+
+Option 2: Manual Commands
+  cd /Users/jguo/work/eclipse-workspace/secure-project-hub
+  
+  # 1. HTTP Health
+  curl -s http://localhost:8080/actuator/health | jq .
+  
+  # 2. Get Token
+  TOKEN=$(curl -s -X POST http://localhost:8080/api/token \
+    -H "Content-Type: application/json" \
+    -d '{"username": "admin", "password": "password"}' | jq -r '.token')
+  
+  # 3-7. PKI Tests (with certificate)
+  curl -s --cert certs/client-cert.pem --key certs/client-key.pem --cacert certs/ca-cert.pem https://localhost:8443/api/pki/health | jq .
+  curl -s --cert certs/client-cert.pem --key certs/client-key.pem --cacert certs/ca-cert.pem https://localhost:8443/api/pki/certificate-info | jq .
+  curl -s --cert certs/client-cert.pem --key certs/client-key.pem --cacert certs/ca-cert.pem https://localhost:8443/api/pki/verify | jq .
+  curl -s --cert certs/client-cert.pem --key certs/client-key.pem --cacert certs/ca-cert.pem https://localhost:8443/api/pki/secure-data | jq .
+  curl -s --cert certs/client-cert.pem --key certs/client-key.pem --cacert certs/ca-cert.pem https://localhost:8443/api/pki/auth-method | jq .
+  
+  # 8. Security Test (should fail)
+  curl -s -k https://localhost:8443/api/pki/health 2>&1
+
+
+📋 ENDPOINTS
+────────────
+
+/api/pki/health              → Health check (needs certificate)
+/api/pki/certificate-info    → Get cert details
+/api/pki/verify              → Verify cert validity
+/api/pki/secure-data         → Protected resource
+/api/pki/auth-method         → Confirm auth method
+
+
+🔐 CERTIFICATES
+────────────────
+
+Client Certificate: certs/client-cert.pem
+Client Private Key: certs/client-key.pem
+CA Certificate:     certs/ca-cert.pem
+
+All 3 required for mTLS authentication!
+
+
+📊 EXPECTED RESULTS
+───────────────────
+
+✅ PKI Health:       {"status": "UP", "description": "PKI Authentication successful"}
+✅ Cert Info:        Shows subject, issuer, valid dates
+✅ Verify:           {"valid": true, "reason": "Certificate is valid and trusted"}
+✅ Secure Data:      Returns JSON payload
+✅ Auth Method:      {"method": "PKI", "details": "..."}
+❌ Security Test:    Connection fails (no certificate = no access)
+
+
+🐳 DOCKER STATUS
+────────────────
+
+Check containers:      docker ps | grep secure-project-hub
+View logs:             docker logs -f secure-project-hub-app-1
+Restart app:           docker restart secure-project-hub-app-1
+Check health:          docker inspect secure-project-hub-app-1 --format='{{json .State.Health}}' | jq .
+
+
+🔗 PORTS
+─────────
+
+Port 8080  → HTTP (OAuth2, general API)
+Port 8443  → HTTPS (PKI/mTLS)
+Port 5432  → PostgreSQL
+
+
+❓ TROUBLESHOOTING
+──────────────────
+
+Connection refused:        docker ps (container should be running)
+Certificate not found:     ls -la certs/ (all files should exist)
+SSL errors:                curl -v ... (add -v for details)
+Wrong directory:           pwd (should be /Users/jguo/work/eclipse-workspace/secure-project-hub)
+
+
+📚 DOCUMENTATION
+─────────────────
+
+START_HERE.md                    ← Read this first!
+COMMANDS_COPY_PASTE.md          ← All commands ready to copy
+PKI_QUICK_START.md              ← Overview & tips
+pki-test-suite.sh              ← Auto test runner
+PKI_TESTING_GUIDE_DOCKER.md    ← Detailed guide (9 phases)
+
+
+✅ SUCCESS CRITERIA
+───────────────────
+
+After running tests, verify:
+
+☑ HTTP health returns UP
+☑ OAuth2 token obtained
+☑ PKI health returns UP
+☑ Certificate info correct
+☑ Verify returns valid:true
+☑ Secure data returns data
+☑ Auth method shows PKI
+☑ Security test fails (as expected)
+☑ Docker containers healthy
+
+
+⏱ TIMING
+─────────
+
+Auto test suite:  ~30 seconds
+Manual tests:     ~2 minutes
+Full guide:       ~30 minutes
+
+
+🎯 WHAT THIS TESTS
+──────────────────
+
+PKI/mTLS Authentication - Certificate-based security where:
+  • Client proves identity with certificate (not password)
+  • Server verifies certificate against trusted CA
+  • Mutual TLS - both sides authenticate
+  • No tokens needed - certificate IS the credential
+  • Suitable for service-to-service communication
+
+
+💼 PRODUCTION NOTES
+────────────────────
+
+Current setup: Development with self-signed certificates
+For production:
+  • Use real certificates from trusted CA
+  • Implement certificate rotation
+  • Set up monitoring for expiration
+  • Use certificate revocation lists (CRL)
+
+
+🔗 QUICK LINKS
+────────────────
+
+GitHub Copilot Docs: https://github.com/features/copilot
+Spring Security PKI: https://spring.io/projects/spring-security
+OpenSSL Docs:        https://www.openssl.org/docs/
+
+
+Created: April 13, 2026
+App Status: ✅ Running on Docker
+Ready to Test: ✅ Yes
