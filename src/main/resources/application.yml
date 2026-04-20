@@ -59,6 +59,11 @@ server:
   port: 8443  # HTTPS port
   http2:
     enabled: true
+  tomcat:
+    # Enable certificate extraction for PKI/mTLS - CRITICAL for client certificate access
+    # This makes client certificates available in request.getAttribute("jakarta.servlet.request.X509Certificate")
+    remote-ip-header: x-forwarded-for
+    protocol-header: x-forwarded-proto
   
   # Allow HTTP on 8080 for actuator/token endpoints (non-sensitive)
   # PKI endpoints are on 8443 HTTPS only

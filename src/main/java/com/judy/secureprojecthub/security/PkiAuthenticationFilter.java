@@ -29,10 +29,15 @@ public class PkiAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(PkiAuthenticationFilter.class);
 
     private final PkiCertificateValidator certificateValidator;
+    private final CertificateRoleService certificateRoleService;
     private final boolean validateExpiry;
 
-    public PkiAuthenticationFilter(PkiCertificateValidator certificateValidator, boolean validateExpiry) {
+    public PkiAuthenticationFilter(
+            PkiCertificateValidator certificateValidator,
+            CertificateRoleService certificateRoleService,
+            boolean validateExpiry) {
         this.certificateValidator = certificateValidator;
+        this.certificateRoleService = certificateRoleService;
         this.validateExpiry = validateExpiry;
     }
 
@@ -73,12 +78,17 @@ public class PkiAuthenticationFilter extends OncePerRequestFilter {
                     // Use the Common Name as the principal
                     String principal = commonName != null ? commonName : "pki-user-" + serialNumber;
 
+                    // Resolve role: database override → OU-based default → fallback to PKI_USER
+                    String resolvedRole = certificateRoleService.resolveCertificateRole(clientCert);
+                    
                     // Grant authorities to PKI-authenticated clients
                     Collection<GrantedAuthority> authorities = new ArrayList<>();
                     
-                    // Grant both PKI_USER and ADMIN roles so they can access REST API endpoints
+                    // Always grant base PKI_USER role
                     authorities.add(new SimpleGrantedAuthority("ROLE_PKI_USER"));
-                    authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                    
+                    // Grant the resolved role (could be ADMIN, USER, VIEWER, or PKI_USER)
+                    authorities.add(new SimpleGrantedAuthority(resolvedRole));
 
                     // Add organization-based role if available
                     if (organization != null && !organization.isEmpty()) {

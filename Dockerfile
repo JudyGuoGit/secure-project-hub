@@ -23,5 +23,5 @@ EXPOSE 8080 8443 5005
 
 # Run with optimized memory settings and remote debugging enabled
 # Increased heap size: 512m -> 1024m to handle PKI/certificate operations
-# Debug port 5005: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-ENTRYPOINT ["java", "-Xms512m", "-Xmx1024m", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "app.jar"]
+# Debug port 5005: Listen for debugger connections (suspend=n allows app to start normally)
+ENTRYPOINT ["java", "-Xms512m", "-Xmx1024m", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005", "-jar", "app.jar"]

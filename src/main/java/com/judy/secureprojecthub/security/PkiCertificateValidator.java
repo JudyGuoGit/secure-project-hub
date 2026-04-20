@@ -124,6 +124,17 @@ public class PkiCertificateValidator {
     }
 
     /**
+     * Extracts the Organizational Unit (OU) from the certificate subject DN.
+     *
+     * @param certificate The X.509 certificate
+     * @return The Organizational Unit, or null if not found
+     */
+    public String extractOrganizationalUnit(X509Certificate certificate) {
+        String subjectDN = extractSubjectDN(certificate);
+        return extractDNAttribute(subjectDN, "OU");
+    }
+
+    /**
      * Extracts the Country (C) from the certificate subject DN.
      *
      * @param certificate The X.509 certificate
