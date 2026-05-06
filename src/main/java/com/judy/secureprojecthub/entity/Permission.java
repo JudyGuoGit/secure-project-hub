@@ -15,7 +15,31 @@ import java.time.LocalDateTime;
 @Schema(name = "Permission", description = "Permission entity representing an action on a resource")
 public class Permission {
     
-    @Id
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "Unique permission identifier", example = "1")
     private Long id;

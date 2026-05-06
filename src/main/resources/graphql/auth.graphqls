@@ -1,0 +1,10 @@
+type TokenResponse {
+  token: String!
+  tokenType: String
+  expiresIn: Long
+}
+
+input TokenRequestInput {
+  username: String!
+  password: String!
+}

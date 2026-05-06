@@ -58,4 +58,8 @@ public class Role {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+	public Long getId() {
+		// TODO Auto-generated method stub
+		return id;
+	}
 }

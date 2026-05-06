@@ -1,0 +1,20 @@
+type Role {
+  id: ID!
+  name: String!
+  description: String
+  createdAt: DateTime
+  updatedAt: DateTime
+
+  users: [User!]!
+  permissions: [Permission!]!
+}
+
+input CreateRoleInput {
+  name: String!
+  description: String
+}
+
+input UpdateRoleInput {
+  name: String
+  description: String
+}

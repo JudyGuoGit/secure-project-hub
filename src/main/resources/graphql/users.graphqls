@@ -1,0 +1,39 @@
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  enabled: Boolean!
+  accountNonExpired: Boolean
+  credentialsNonExpired: Boolean
+  accountNonLocked: Boolean
+  fullName: String
+  bio: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  lastLoginAt: DateTime
+  version: Long
+
+  roles: [Role!]!
+  auditLogs: [AuditLog!]!
+}
+
+input CreateUserInput {
+  username: String!
+  email: String!
+  password: String!
+  enabled: Boolean = true
+  fullName: String
+  bio: String
+}
+
+input UpdateUserInput {
+  username: String
+  email: String
+  password: String
+  enabled: Boolean
+  accountNonExpired: Boolean
+  credentialsNonExpired: Boolean
+  accountNonLocked: Boolean
+  fullName: String
+  bio: String
+}

@@ -1,4 +1,4 @@
-package com.judy.secureprojecthub.controller;
+package com.judy.secureprojecthub.controller.restapi;
 
 import com.judy.secureprojecthub.entity.User;
 import com.judy.secureprojecthub.repository.UserRepository;

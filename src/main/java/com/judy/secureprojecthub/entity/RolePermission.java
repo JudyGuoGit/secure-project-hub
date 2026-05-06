@@ -32,7 +32,47 @@ public class RolePermission {
     @Schema(description = "The permission granted to the role")
     private Permission permission;
     
-    @Column(nullable = false)
+    public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public Permission getPermission() {
+		return permission;
+	}
+
+	public void setPermission(Permission permission) {
+		this.permission = permission;
+	}
+
+	public LocalDateTime getGrantedAt() {
+		return grantedAt;
+	}
+
+	public void setGrantedAt(LocalDateTime grantedAt) {
+		this.grantedAt = grantedAt;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
+	@Column(nullable = false)
     @Schema(description = "When the permission was granted to the role", example = "2026-04-01T17:46:38.909261")
     private LocalDateTime grantedAt = LocalDateTime.now();
     

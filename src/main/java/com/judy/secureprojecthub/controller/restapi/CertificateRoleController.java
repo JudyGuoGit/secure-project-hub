@@ -1,4 +1,4 @@
-package com.judy.secureprojecthub.controller;
+package com.judy.secureprojecthub.controller.restapi;
 
 import com.judy.secureprojecthub.entity.CertificateRoleMapping;
 import com.judy.secureprojecthub.security.CertificateRoleService;

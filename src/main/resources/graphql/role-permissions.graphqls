@@ -1,0 +1,16 @@
+type RolePermission {
+  id: ID!
+  role: Role!
+  permission: Permission!
+  grantedAt: DateTime
+}
+
+input GrantPermissionToRoleInput {
+  roleId: ID!
+  permissionId: ID!
+}
+
+input UpdateRolePermissionInput {
+  roleId: ID
+  permissionId: ID
+}

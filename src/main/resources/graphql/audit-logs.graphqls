@@ -1,0 +1,34 @@
+type AuditLog {
+  id: ID!
+  user: User
+  action: String!
+  actionType: String!
+  description: String
+  status: String
+  ipAddress: String
+  userAgent: String
+  createdAt: DateTime
+  details: JSON
+}
+
+input CreateAuditLogInput {
+  userId: ID
+  action: String!
+  actionType: String!
+  description: String
+  status: String
+  ipAddress: String
+  userAgent: String
+  details: JSON
+}
+
+input UpdateAuditLogInput {
+  userId: ID
+  action: String
+  actionType: String
+  description: String
+  status: String
+  ipAddress: String
+  userAgent: String
+  details: JSON
+}

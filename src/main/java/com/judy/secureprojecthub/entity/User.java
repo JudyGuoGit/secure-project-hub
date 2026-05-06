@@ -97,6 +97,9 @@ public class User {
     public String getBio() {
         return bio;
     }
+    public long getId() {
+		return id;
+	}
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }

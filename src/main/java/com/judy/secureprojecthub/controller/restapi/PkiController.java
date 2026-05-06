@@ -1,4 +1,4 @@
-package com.judy.secureprojecthub.controller;
+package com.judy.secureprojecthub.controller.restapi;
 
 import com.judy.secureprojecthub.security.PkiCertificateValidator;
 import io.swagger.v3.oas.annotations.Operation;

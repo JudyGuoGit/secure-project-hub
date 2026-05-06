@@ -19,6 +19,9 @@ spring:
     locations: classpath:db/migration
     baselineOnMigrate: true
     baselineVersion: "0"
+  graphql:
+    graphiql:
+      enabled: true
 
 springdoc:
   swagger-ui:

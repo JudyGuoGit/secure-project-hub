@@ -1,0 +1,19 @@
+input CertificateRoleMappingInput {
+  certificateCN: String!
+  roleName: String!
+}
+
+type CertificateInfo {
+  subject: String
+  issuer: String
+  serialNumber: String
+  validFrom: DateTime
+  validTo: DateTime
+  commonName: String
+}
+
+type PkiHealthStatus {
+  status: String
+  authenticated: Boolean
+  certificate: CertificateInfo
+}

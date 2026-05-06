@@ -1,0 +1,74 @@
+type Query {
+  # Users
+  users: [User!]!
+  user(id: ID!): User
+
+  # Roles
+  roles: [Role!]!
+  role(id: ID!): Role
+
+  # Permissions
+  permissions: [Permission!]!
+  permission(id: ID!): Permission
+
+  # Assignments
+  userRoles: [UserRole!]!
+  userRole(id: ID!): UserRole
+
+  rolePermissions: [RolePermission!]!
+  rolePermission(id: ID!): RolePermission
+
+  # Audit Logs
+  auditLogs: [AuditLog!]!
+  auditLog(id: ID!): AuditLog
+
+  # PKI / mTLS
+  pkiHealth: JSON
+  certificateInfo: JSON
+  verifyCertificate: JSON
+  secureData: JSON
+  authMethod: JSON
+
+  # Basic checks
+  hello: String
+  status: String
+}
+
+type Mutation {
+  # Authentication
+  generateToken(input: TokenRequestInput!): TokenResponse!
+
+  # Users
+  createUser(input: CreateUserInput!): User!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
+
+  # Roles
+  createRole(input: CreateRoleInput!): Role!
+  updateRole(id: ID!, input: UpdateRoleInput!): Role!
+  deleteRole(id: ID!): Boolean!
+
+  # Permissions
+  createPermission(input: CreatePermissionInput!): Permission!
+  updatePermission(id: ID!, input: UpdatePermissionInput!): Permission!
+  deletePermission(id: ID!): Boolean!
+
+  # User-role assignments
+  assignRoleToUser(input: AssignRoleToUserInput!): UserRole!
+  updateUserRole(id: ID!, input: UpdateUserRoleInput!): UserRole!
+  removeRoleFromUser(id: ID!): Boolean!
+
+  # Role-permission assignments
+  grantPermissionToRole(input: GrantPermissionToRoleInput!): RolePermission!
+  updateRolePermission(id: ID!, input: UpdateRolePermissionInput!): RolePermission!
+  revokePermissionFromRole(id: ID!): Boolean!
+
+  # Audit Logs
+  createAuditLog(input: CreateAuditLogInput!): AuditLog!
+  updateAuditLog(id: ID!, input: UpdateAuditLogInput!): AuditLog!
+  deleteAuditLog(id: ID!): Boolean!
+
+  # Certificate role mappings
+  addCertificateRoleMapping(input: CertificateRoleMappingInput!): JSON
+  removeCertificateRoleMapping(certificateCN: String!): JSON
+}
