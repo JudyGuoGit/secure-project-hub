@@ -1,6 +1,7 @@
 # 🔐 Secure Project Hub
 
-A production-ready Spring Boot application demonstrating OAuth2 JWT token-based authentication, role-based access control (RBAC), database migrations, and comprehensive REST APIs with Swagger documentation.
+Production-ready Spring Boot platform demonstrating secure backend architecture with OAuth2/JWT authentication, role-based access control (RBAC), REST and GraphQL APIs, PostgreSQL database migrations, Dockerized deployment, and OpenAPI/Swagger documentation.
+
 
 ## 📋 Table of Contents
 
